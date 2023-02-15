@@ -27,6 +27,7 @@ app = Flask(__name__)
 moment = Moment(app)
 app.config.from_object('config')
 db.init_app(app)
+debug = True
 
 migrate = Migrate(app, db)
 
@@ -57,30 +58,30 @@ def view_profile():
 
     render_template('home/profile.html')
 
-@app.route('/profile/<int:publisher_id>', methods=['PATCH'])
-def edit_profile(publisher_id):
+#@app.route('/profile/<int:publisher_id>', methods=['PATCH'])
 
-    render_template('home/profile.html')
+#def edit_profile(publisher_id):
+#    render_template('home/profile.html')
 
 # Publisher routes. Publishers could only see their own campaigns
 
-@app.route('/campaigns/<int:publisher_id>', methods=['GET'])
-def list_campaigns(publisher_id):
+#@app.route('/campaigns/<int:publisher_id>', methods=['GET'])
+#def list_campaigns(publisher_id):
 
-@app.route('/campaigns', methods=['POST'])
-def create_campaign():
+#@app.route('/campaigns', methods=['POST'])
+#def create_campaign():
 
-@app.route('/campaigns/<int:id_campaing', methods=['DELETE'])
-def delete_campaign(id_campaign):
+#@app.route('/campaigns/<int:id_campaing', methods=['DELETE'])
+#def delete_campaign(id_campaign):
 
 
 # Creators routes. Creators can see all campaigns in orther to apply
 
-@app.route('/campaigns', methods=['GET'])
-def list_all_campaigns():
+#@app.route('/campaigns', methods=['GET'])
+#def list_all_campaigns():
 
-@app.route('/campaigns/<int:id_campaign>', methods=['PATCH'])
-def apply_campaign(id_campaign):
+#@app.route('/campaigns/<int:id_campaign>', methods=['PATCH'])
+#def apply_campaign(id_campaign):
 
 
 #Error handlers
