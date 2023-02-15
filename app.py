@@ -50,15 +50,56 @@ app.jinja_env.filters['datetime'] = format_datetime
 def home():
     return render_template('home/index.html')
 
+#Profile routes
+
+@app.route('/profile', methods=['GET'])
+def view_profile():
+
+    render_template('home/profile.html')
+
+@app.route('/profile/<int:publisher_id>', methods=['PATCH'])
+def edit_profile(publisher_id):
+
+    render_template('home/profile.html')
+
+# Publisher routes. Publishers could only see their own campaigns
+
+@app.route('/campaigns/<int:publisher_id>', methods=['GET'])
+def list_campaigns(publisher_id):
+
+@app.route('/campaigns', methods=['POST'])
+def create_campaign():
+
+@app.route('/campaigns/<int:id_campaing', methods=['DELETE'])
+def delete_campaign(id_campaign):
+
+
+# Creators routes. Creators can see all campaigns in orther to apply
+
+@app.route('/campaigns', methods=['GET'])
+def list_all_campaigns():
+
+@app.route('/campaigns/<int:id_campaign>', methods=['PATCH'])
+def apply_campaign(id_campaign):
+
+
+#Error handlers
+
+@app.errorhandler(403)
+def not_found_error(error):
+    return render_template('home/page-403.html'), 403
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('home/page-404.html'), 404
+
+@app.errorhandler(500)
+def server_error(error):
+    return render_template('home/page-500.html'), 500
 
 
 
-
-
-
-
-
-
+# Default port and launch
 
 if __name__ == "__main__":
     app.run(debug=True)
