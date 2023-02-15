@@ -1,2 +1,0 @@
-# coninfluence
-Digital Agency Project
