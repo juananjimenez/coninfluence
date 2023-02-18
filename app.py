@@ -18,7 +18,7 @@ from logging import Formatter, FileHandler
 from flask_wtf import Form
 import sys
 from datetime import datetime
-from models import db
+from models import db, Campaigns, Creators, Publisher
 
 
 # App configuration
@@ -56,17 +56,23 @@ def home():
 @app.route('/profile', methods=['GET'])
 def view_profile():
 
-    render_template('home/profile.html')
+    return render_template('home/profile.html')
 
 #@app.route('/profile/<int:publisher_id>', methods=['PATCH'])
-
 #def edit_profile(publisher_id):
 #    render_template('home/profile.html')
 
 # Publisher routes. Publishers could only see their own campaigns
 
-#@app.route('/campaigns/<int:publisher_id>', methods=['GET'])
-#def list_campaigns(publisher_id):
+@app.route('/campaigns/<int:id_publisher>', methods=['GET'])
+def list_campaigns(id_publisher):
+
+   campaign = Campaigns.query.get_or_404(id_publisher)
+   print (campaign.name)
+
+   return render_template('home/campaigns.html', campaing=campaign)
+
+
 
 #@app.route('/campaigns', methods=['POST'])
 #def create_campaign():
@@ -79,6 +85,7 @@ def view_profile():
 
 #@app.route('/campaigns', methods=['GET'])
 #def list_all_campaigns():
+
 
 #@app.route('/campaigns/<int:id_campaign>', methods=['PATCH'])
 #def apply_campaign(id_campaign):
