@@ -51,12 +51,15 @@ app.jinja_env.filters['datetime'] = format_datetime
 def home():
     return render_template('home/index.html')
 
-#Profile routes
+#Creator Profile routes
 
-@app.route('/profile', methods=['GET'])
-def view_profile():
+@app.route('/profile/<int:creator_id>', methods=['GET'])
+def view_profile(creator_id):
 
-    return render_template('home/profile.html')
+    profile = Creators.query.get_or_404(creator_id)
+
+
+    return render_template('home/profile.html', profile=profile)
 
 #@app.route('/profile/<int:publisher_id>', methods=['PATCH'])
 #def edit_profile(publisher_id):
@@ -64,11 +67,11 @@ def view_profile():
 
 # Publisher routes. Publishers could only see their own campaigns
 
-@app.route('/campaigns/<int:id_publisher>', methods=['GET'])
-def list_campaigns(id_publisher):
+@app.route('/campaigns', methods=['GET'])
+def list_campaigns():
 
-   campaign = Campaigns.query.get_or_404(id_publisher)
-   print (campaign.name)
+   campaign = Campaigns.query.all()
+
 
    return render_template('home/campaigns.html', campaing=campaign)
 
