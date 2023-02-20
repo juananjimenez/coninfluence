@@ -58,15 +58,16 @@ def view_profile(creator_id):
 
     profile = Creators.query.get_or_404(creator_id)
 
-
     return render_template('home/profile.html', profile=profile)
 
 # Creators list only for publishers
 
-#@app.route('/creators/', methods=['GET'])
-#def list_creators():
+@app.route('/creators', methods=['GET'])
+def list_creators():
 
-#    return render_template('home/creators.html')
+    creators = Creators.query.all()
+
+    return render_template('home/creators.html', creators=creators)
 
 # Publishers Profile route
 
@@ -78,7 +79,6 @@ def view_publisher_profile(publisher_id):
     campaigns_created = Campaigns.query.filter_by(id_publisher = publisher_id).count()
     print (campaigns_created)
 
-
     return render_template('home/publishers-profile.html', profile=publisher_profile, campaigns = campaigns_created)
 
 
@@ -89,8 +89,6 @@ def list_campaigns():
 
    campaign = Campaigns.query.all()
    
-
-
    return render_template('home/campaigns.html', campaing=campaign)
 
 

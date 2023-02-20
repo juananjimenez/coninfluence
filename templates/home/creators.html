@@ -1,0 +1,97 @@
+{% extends 'layouts/base-fullscreen.html' %}
+
+{% block title %} Tables {% endblock title %}
+
+{% block content %}
+
+<div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-lg-6 col-7">
+          <h6 class="h2 text-white d-inline-block mb-0"></h6>
+          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+           
+          </nav>
+        </div>
+        <div class="col-lg-6 col-5 text-right">
+          <a href="#" class=""></a>
+          <a href="#" class=""></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <!-- Card header -->
+          <div class="card-header border-0">
+            <h3 class="mb-0">All our creators</h3>
+          </div>
+          <!-- Light table -->
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col" class="sort" data-sort="name">Nick Name</th>
+                  <th scope="col" class="sort" data-sort="budget">Total Followers</th>
+                  <th scope="col" class="sort" data-sort="status">Topics</th>
+                  <th scope="col" class="sort" data-sort="status">Channels</th>  
+                </tr>
+              </thead>
+              {% for creator in creators %}
+              <tbody class="list">
+                <tr>
+                  <th scope="row">
+                    <div class="media align-items-center">
+                      <div class="media-body">
+                        <span class="name mb-0 text-sm">{{creator.nick_name}}</span>
+                      </div>
+                    </div>
+                  </th>
+                  <td class="budget">
+                    {{creator.total_followers}}
+                  </td>
+                  <td>
+                    <div class="media align-items-center">
+                        <div class="media-body">
+                      <span class="name mb-0 text-sm">{{creator.topics}}</span>
+                        </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="media align-items-center">
+                        <div class="media-body">
+                      <span class="name mb-0 text-sm">{{creator.instagram}}, {{creator.tik_tok}}, {{creator.youtube}}</span>
+                        </div>
+                    </div>
+                  </td>
+                  <td class="text-right">
+                    <div class="dropdown">
+                      <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-ellipsis-v"></i>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                        <a class="dropdown-item" href="/profile/{{creator.id}}">View profile</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+    {% include "includes/footer-fullscreen.html" %}
+
+  
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}{% endblock javascripts %}
