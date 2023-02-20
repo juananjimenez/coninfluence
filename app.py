@@ -51,7 +51,7 @@ app.jinja_env.filters['datetime'] = format_datetime
 def home():
     return render_template('home/index.html')
 
-#Creator Profile routes
+#Creators Profile route
 
 @app.route('/profile/<int:creator_id>', methods=['GET'])
 def view_profile(creator_id):
@@ -61,9 +61,26 @@ def view_profile(creator_id):
 
     return render_template('home/profile.html', profile=profile)
 
-#@app.route('/profile/<int:publisher_id>', methods=['PATCH'])
-#def edit_profile(publisher_id):
-#    render_template('home/profile.html')
+# Creators list only for publishers
+
+#@app.route('/creators/', methods=['GET'])
+#def list_creators():
+
+#    return render_template('home/creators.html')
+
+# Publishers Profile route
+
+@app.route('/publishers-profile/<int:publisher_id>', methods=['GET'])
+def view_publisher_profile(publisher_id):
+
+    publisher_profile = Publisher.query.get_or_404(publisher_id)
+
+    campaigns_created = Campaigns.query.filter_by(id_publisher = publisher_id).count()
+    print (campaigns_created)
+
+
+    return render_template('home/publishers-profile.html', profile=publisher_profile, campaigns = campaigns_created)
+
 
 # Publisher routes. Publishers could only see their own campaigns
 
@@ -71,6 +88,7 @@ def view_profile(creator_id):
 def list_campaigns():
 
    campaign = Campaigns.query.all()
+   
 
 
    return render_template('home/campaigns.html', campaing=campaign)
