@@ -65,10 +65,11 @@ def home():
 
 @app.route('/profile/<int:creator_id>', methods=['GET'])
 def view_profile(creator_id):
+  
+        profile = Creators.query.get_or_404(creator_id)
 
-    profile = Creators.query.get_or_404(creator_id)
+        return render_template('home/profile.html', profile=profile)
 
-    return render_template('home/profile.html', profile=profile)
 
 # Creators Profile edit route
 
@@ -109,11 +110,36 @@ def list_campaigns():
    return render_template('home/campaigns.html', campaing=campaign)
 
 
+@app.route('/new-campaign', methods=['GET', 'POST'])
+def create_campaign():
 
-#@app.route('/campaigns', methods=['POST'])
-#def create_campaign():
+    error = False
+    
+    try:
+        campaign = Campaigns (name = request.form.get('name'),
+        start_date = request.form.get('end'),
+        last_date = request.form.get('start'),
+        budget = request.form.get('budget'),
+        sources = request.form.get('social'),
+        description = request.form.get('description'),
+        creator = request.form.get('creator', ''),
+        publisher = request.form.get('publisher', '')
+        )
+        print(campaign)
+        db.session.add(campaign)
+        db.session.commit()
+    except: 
+        db.session.rollback()
+        
+        error = True
+        print(sys.exc_info())
+    
+    finally:
+        db.session.close()
 
+    return redirect(url_for('list_campaigns'))
 
+    
 
 @app.route('/campaigns/<int:campaign_id>/delete', methods=['GET', 'DELETE'])
 def delete_campaign(campaign_id):
