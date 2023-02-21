@@ -5,12 +5,14 @@ from flask import (
   Flask, 
   render_template, 
   request, 
-  Response, 
+  Response,
+  jsonify, 
   flash, 
   redirect, 
   url_for, 
   abort)
 from flask_moment import Moment
+#from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 import logging
 from flask_migrate import Migrate
@@ -25,11 +27,13 @@ from models import db, Campaigns, Creators, Publisher
 
 app = Flask(__name__)
 moment = Moment(app)
+#CORS(app)
 app.config.from_object('config')
 db.init_app(app)
 debug = True
 
 migrate = Migrate(app, db)
+
 
 
 # Filter
@@ -47,6 +51,12 @@ app.jinja_env.filters['datetime'] = format_datetime
 
 # Routes 
 
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    response.headers.add('Access-Control-Allow-Headers', 'GET, POST, PATCH, DELETE, OPTIONS')
+    return response
+
 @app.route('/')
 def home():
     return render_template('home/index.html')
@@ -59,6 +69,13 @@ def view_profile(creator_id):
     profile = Creators.query.get_or_404(creator_id)
 
     return render_template('home/profile.html', profile=profile)
+
+# Creators Profile edit route
+
+#@app.route('/profile/<int:creator_id', methods=['PATCH'])
+#def edit_creator(creator_id):
+
+
 
 # Creators list only for publishers
 
@@ -96,9 +113,26 @@ def list_campaigns():
 #@app.route('/campaigns', methods=['POST'])
 #def create_campaign():
 
-#@app.route('/campaigns/<int:id_campaing', methods=['DELETE'])
-#def delete_campaign(id_campaign):
 
+
+@app.route('/campaigns/<int:campaign_id>/delete', methods=['GET', 'DELETE'])
+def delete_campaign(campaign_id):
+    
+    try:
+        Campaigns.query.filter_by(id = campaign_id).delete()
+        db.session.commit()
+        flash('The campaign has been deleted')
+        return render_template('home/campaigns.html')
+    
+    except ValueError:
+        flash('It was not possible to delete this campaign')
+        db.session.rollback()
+        
+    finally:
+        db.session.close()
+
+    #return redirect(url_for('campaigns'))
+       
 
 # Creators routes. Creators can see all campaigns in orther to apply
 
