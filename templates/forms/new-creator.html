@@ -13,72 +13,24 @@
     <div class="row">
       <div class="col-lg-7 col-md-10">
         <h1 class="display-2 text-white"> 
-          Hello {{profile.first_name}}
+          Your information
         </h1>
       </div>
     </div>
   </div>
 </div>
 <!-- Page content -->
-<div class="container-fluid mt--6">
-  <div class="row">
-    <div class="col-xl-4 order-xl-2">
-      <div class="card card-profile">
-        <img src="/static/assets/img/theme/img-1-1000x600.jpg" alt="Image placeholder" class="card-img-top">
-        <div class="row justify-content-center">
-          <div class="col-lg-3 order-lg-2">
-            <div class="card-profile-image">
-              <a href="#">
-                <img src="{{profile.url_picture}}" class="rounded-circle">
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
-          <div class="d-flex justify-content-between">
-            <a href="#" class="btn btn-sm btn-info  mr-4 ">Connect</a>
-          </div>
-        </div>
-        <div class="card-body pt-0">
-          <div class="row">
-            <div class="col">
-              <div class="card-profile-stats d-flex justify-content-center">
-                <div>
-                  <span class="heading">{{profile.total_followers}}</span>
-                  <span class="description">Followers</span>
-                </div>
-                <div>
-                  <span class="heading">10</span>
-                  <span class="description">Campaigns</span>
-                </div>
-                <div>
-                  <span class="heading">12.345 $</span>
-                  <span class="description">Earnings</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="text-center">
-            <h5 class="h3">
-              {{profile.nick_name}}
-            </h5>
-            <div class="h5 font-weight-300">
-              {{profile.email}}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-xl-8 order-xl-1">
+
+    <div class="col-xl-12 order-xl-1">
       <div class="card">
         <div class="card-header">
           <div class="row align-items-center">
             <div class="col-8">
               <h3 class="mb-0">Your profile </h3>
             </div>
-            <form action="/profile/{{profile.id}}/update" method="POST" class="form"></form>
             <div class="col-4 text-right">
-              <a href="/creator/{{profile.id}}/edit" class="btn btn-sm btn-info  mr-4 ">Edit</a>
+              <form method="POST" class="form">
+              <input type="submit" value="Save" class="btn btn-primary btn-lg btn-block">
             </div>
           </div>
         </div>
@@ -90,13 +42,13 @@
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="input-username">Nick Name</label>
-                    <input type="text" id="input-username" class="form-control" placeholder="{{profile.nick_name}}" value="{{profile.nick_name}}">
+                    {{ form.nick_name(class_ = 'form-control', placeholder='City', autofocus = true) }}
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="input-email">Email address</label>
-                    <input type="email" id="input-email" class="form-control" placeholder="{{profile.email}}">
+                    {{ form.email(class_ = 'form-control', placeholder='email', autofocus = true) }}
                   </div>
                 </div>
               </div>
@@ -104,13 +56,25 @@
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="input-first-name">First name</label>
-                    <input type="text" id="input-first-name" class="form-control" placeholder="{{profile.first_name}}" value="{{profile.first_name}}">
+                    {{ form.first_name(class_ = 'form-control', placeholder='First Name', autofocus = true) }}
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="input-last-name">Last name</label>
-                    <input type="text" id="input-last-name" class="form-control" placeholder="{{profile.last_name}}" value="{{profile.last_name}}">
+                    {{ form.last_name(class_ = 'form-control', placeholder='Last Name', autofocus = true) }}
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-last-name">Picture URL</label>
+                    {{ form.url_picture(class_ = 'form-control', placeholder='Picture URL', autofocus = true) }}
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label class="form-control-label" for="input-last-name">Total Followers</label>
+                    {{ form.total_followers(class_ = 'form-control', placeholder='xxx.xxx', autofocus = true) }}
                   </div>
                 </div>
               </div>
@@ -124,19 +88,19 @@
                 <div class="col-lg-4">
                   <div class="form-group">
                     <label class="form-control-label" for="input-city">Instagram</label>
-                    <input type="text" id="input-city" class="form-control" placeholder="{{profile.instagram}}" value="{{profile.instagram}}">
+                    {{ form.instagram(class_ = 'form-control', placeholder='Instagram', autofocus = true) }}
                   </div>
                 </div>
                 <div class="col-lg-4">
                   <div class="form-group">
                     <label class="form-control-label" for="input-country">Tik-Tok</label>
-                    <input type="text" id="input-country" class="form-control" placeholder="{{profile.tik_tok}}" value="{{profile.tik_tok}}">
+                    {{ form.tik_tok(class_ = 'form-control', placeholder='Tik Tok', autofocus = true) }}
                   </div>
                 </div>
                 <div class="col-lg-4">
                   <div class="form-group">
                     <label class="form-control-label" for="input-country">Facebook</label>
-                    <input type="number" id="input-postal-code" class="form-control" placeholder="{{profile.facebook}}">
+                    {{ form.facebook(class_ = 'form-control', placeholder='Facebook', autofocus = true) }}
                   </div>
                 </div>
               </div>
@@ -144,13 +108,13 @@
               <div class="col-lg-4">
                 <div class="form-group">
                   <label class="form-control-label" for="input-city">Twitter</label>
-                  <input type="text" id="input-city" class="form-control" placeholder="{{profile.twitter}}" value="{{profile.twitter}}">
+                  {{ form.twitter(class_ = 'form-control', placeholder='Twitter', autofocus = true) }}
                 </div>
               </div>
               <div class="col-lg-4">
                 <div class="form-group">
                   <label class="form-control-label" for="input-country">Youtube</label>
-                  <input type="text" id="input-country" class="form-control" placeholder="{{profile.youtube}}" value="{{profile.youtube}}">
+                  {{ form.youtube(class_ = 'form-control', placeholder='Youtube', autofocus = true) }}
                 </div>
               </div>
             </div>
@@ -162,7 +126,7 @@
             <div class="pl-lg-4">
               <div class="form-group">
                 <label class="form-control-label">The type of content I create</label>
-                <textarea rows="2" class="form-control" placeholder="A few words about you ...">{{profile.topics}}</textarea>
+                {{ form.topics(class_ = 'form-control', placeholder='topics', autofocus = true) }}
               </div>
             </div>
           </form>

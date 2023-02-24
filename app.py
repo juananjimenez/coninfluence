@@ -1,3 +1,8 @@
+#------------------------------------------#
+# Imports
+#------------------------------------------#
+
+
 import json
 import dateutil.parser
 import babel
@@ -12,7 +17,7 @@ from flask import (
   url_for, 
   abort)
 from flask_moment import Moment
-#from flask_cors import CORS
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 import logging
 from flask_migrate import Migrate
@@ -21,6 +26,7 @@ from flask_wtf import Form
 import sys
 from datetime import datetime
 from models import db, Campaigns, Creators, Publisher
+from forms import *
 
 
 # App configuration
@@ -31,7 +37,7 @@ moment = Moment(app)
 app.config.from_object('config')
 db.init_app(app)
 debug = True
-
+CORS(app)
 migrate = Migrate(app, db)
 
 
@@ -61,22 +67,16 @@ def after_request(response):
 def home():
     return render_template('home/index.html')
 
-#Creators Profile route
+#--------------------------------------#
+# Creators routes
+#---------------------------------------#
 
 @app.route('/profile/<int:creator_id>', methods=['GET'])
-def view_profile(creator_id):
+def show_profile(creator_id):
   
         profile = Creators.query.get_or_404(creator_id)
 
         return render_template('home/profile.html', profile=profile)
-
-
-# Creators Profile edit route
-
-#@app.route('/profile/<int:creator_id', methods=['PATCH'])
-#def edit_creator(creator_id):
-
-
 
 # Creators list only for publishers
 
@@ -85,9 +85,90 @@ def list_creators():
 
     creators = Creators.query.all()
 
-    return render_template('home/creators.html', creators=creators)
+    return render_template('home/creators-list.html', creators=creators)
 
-# Publishers Profile route
+
+# New Creator
+
+@app.route('/creators/new', methods=['GET'])
+def new_creator_form():
+  form = CreatorForm()
+
+  return render_template('forms/new-creator.html', form=form)
+
+
+@app.route('/creators/new', methods=['POST'])
+def new_creator_submit():
+    error = False
+    form = CreatorForm()
+
+    try: 
+        first_name = form.first_name.data
+        last_name = form.last_name.data
+        nick_name = form.nick_name.data
+        url_picture = form.url_picture.data
+        email = form.email.data
+        topics = form.topics.data
+        instagram = form.instagram.data
+        tik_tok = form.tik_tok.data
+        facebook = form.facebook.data
+        twitter = form.twitter.data
+        youtube = form.youtube.data
+        total_followers = form.total_followers.data
+
+        creator = Creators(first_name = first_name, last_name = last_name, nick_name = nick_name, url_picture = url_picture, email = email, topics = topics,
+        instagram = instagram, tik_tok = tik_tok, facebook = facebook, twitter = twitter, youtube = youtube, total_followers = total_followers)
+        
+        db.session.add(creator)
+        flash('Creator ' + form.nick_name.data + ' was successfully listed!')
+        db.session.commit()
+  
+    except:
+        db.session.rollback()
+        error = True
+        print(sys.exec_info())
+    finally:
+        db.session.close()
+
+    return render_template('forms/new-creator.html', form=form)   
+
+# Edit creator profile
+
+@app.route('/creator/<int:creator_id>/edit', methods= ['GET'])
+def edit_creator_form(creator_id):
+
+    form = CreatorForm()
+    creator = Creators.query.filter_by(id = creator_id).first()
+
+    form.first_name.data = creator.first_name
+    form.last_name.data = creator.last_name
+    form.nick_name.data = creator.nick_name
+    form.url_picture.data = creator.url_picture
+    form.email.data = creator.email
+    form.topics.data = creator.topics
+    form.instagram.data = creator.instagram
+    form.tik_tok.data = creator.tik_tok
+    form.facebook.data = creator.facebook
+    form.twitter.data = creator.twitter
+    form.youtube.data = creator.youtube
+    form.total_followers.data = creator.total_followers
+
+    return render_template('forms/edit-creator.html', form=form, creator=creator)
+
+
+@app.route('/creator/<int:creator_id>/edit', methods= ['PATCH'])
+def edit_creator_submission(creator_id):
+
+
+        
+
+
+    return redirect(url_for('show_profile', creator_id=creator_id))
+
+#------------------------------------#
+# Publishers routes
+#------------------------------------#
+
 
 @app.route('/publishers-profile/<int:publisher_id>', methods=['GET'])
 def view_publisher_profile(publisher_id):
@@ -95,12 +176,12 @@ def view_publisher_profile(publisher_id):
     publisher_profile = Publisher.query.get_or_404(publisher_id)
 
     campaigns_created = Campaigns.query.filter_by(id_publisher = publisher_id).count()
-    print (campaigns_created)
+    
 
     return render_template('home/publishers-profile.html', profile=publisher_profile, campaigns = campaigns_created)
 
 
-# Publisher routes. Publishers could only see their own campaigns
+# Publisher routes. Publishers could only see their own campaigns. This route is used for creators too and can only see theirs
 
 @app.route('/campaigns', methods=['GET'])
 def list_campaigns():
@@ -109,35 +190,38 @@ def list_campaigns():
    
    return render_template('home/campaigns.html', campaing=campaign)
 
+#------------------------------------------#
+#Campigns routes
+#-------------------------------------------#
 
-@app.route('/new-campaign', methods=['GET', 'POST'])
-def create_campaign():
+#@app.route('/new-campaign', methods=['GET', 'POST'])
+#def create_campaign():
 
-    error = False
+ #   error = False
     
-    try:
-        campaign = Campaigns (name = request.form.get('name'),
-        start_date = request.form.get('end'),
-        last_date = request.form.get('start'),
-        budget = request.form.get('budget'),
-        sources = request.form.get('social'),
-        description = request.form.get('description'),
-        creator = request.form.get('creator', ''),
-        publisher = request.form.get('publisher', '')
-        )
-        print(campaign)
-        db.session.add(campaign)
-        db.session.commit()
-    except: 
-        db.session.rollback()
+  #  try:
+   #     campaign = Campaigns (name = request.form.get('name'),
+    #    start_date = request.form.get('end'),
+     #   last_date = request.form.get('start'),
+      #  budget = request.form.get('budget'),
+      #  sources = request.form.get('social'),
+      #  description = request.form.get('description'),
+      #  creator = request.form.get('creator', ''),
+       # publisher = request.form.get('publisher', '')
+       # )
+        #print(campaign)
+        #db.session.add(campaign)
+        #db.session.commit()
+    #except: 
+    #    db.session.rollback()
         
-        error = True
-        print(sys.exc_info())
+    #    error = True
+     #   print(sys.exc_info())
     
-    finally:
-        db.session.close()
+    #finally:
+    #    db.session.close()
 
-    return redirect(url_for('list_campaigns'))
+    #return redirect(url_for('list_campaigns'))
 
     
 
@@ -161,10 +245,6 @@ def delete_campaign(campaign_id):
        
 
 # Creators routes. Creators can see all campaigns in orther to apply
-
-#@app.route('/campaigns', methods=['GET'])
-#def list_all_campaigns():
-
 
 #@app.route('/campaigns/<int:id_campaign>', methods=['PATCH'])
 #def apply_campaign(id_campaign):
