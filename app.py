@@ -18,6 +18,7 @@ from flask import (
   abort)
 from flask_moment import Moment
 from flask_cors import CORS
+from sqlalchemy import update
 from flask_sqlalchemy import SQLAlchemy
 import logging
 from flask_migrate import Migrate
@@ -156,14 +157,52 @@ def edit_creator_form(creator_id):
     return render_template('forms/edit-creator.html', form=form, creator=creator)
 
 
-@app.route('/creator/<int:creator_id>/edit', methods= ['PATCH'])
+@app.route('/creator/<int:creator_id>/edit', methods= ['POST'])
 def edit_creator_submission(creator_id):
 
+    error = False
+    form = CreatorForm()
+    
+    try:
+    
+        first_name = form.first_name.data
+        last_name = form.last_name.data
+        nick_name = form.nick_name.data
+        url_picture = form.url_picture.data
+        email = form.email.data
+        topics = form.topics.data
+        instagram = form.instagram.data
+        tik_tok = form.tik_tok.data
+        facebook = form.facebook.data
+        twitter = form.twitter.data
+        youtube = form.youtube.data
+        total_followers = form.total_followers.data
 
         
+        db.session.execute(update(Creators).where(id == creator_id).values(first_name = first_name, last_name = last_name, nick_name = nick_name, url_picture = url_picture, email = email, topics = topics,
+        instagram = instagram, tik_tok = tik_tok, facebook = facebook, twitter = twitter, youtube = youtube, total_followers = total_followers))
+        db.session.commit()
 
+    except:
+        
+        db.session.rollback()
+        error = True
+        
 
+    finally:
+        db.session.close()
+
+    if error:
+        abort(500)
+        flash('An error occurred. Creator ' + nick_name + ' could not be updated.')
+    
+    else:
+        flash('Creator ' + nick_name + ' was successfully updated!')
+    
     return redirect(url_for('show_profile', creator_id=creator_id))
+    
+
+
 
 #------------------------------------#
 # Publishers routes
@@ -180,8 +219,12 @@ def view_publisher_profile(publisher_id):
 
     return render_template('home/publishers-profile.html', profile=publisher_profile, campaigns = campaigns_created)
 
+#------------------------------------------#
+#Campigns routes
+#-------------------------------------------#
 
-# Publisher routes. Publishers could only see their own campaigns. This route is used for creators too and can only see theirs
+
+# Publishers could only see their own campaigns. This route is used for creators too and can only see theirs
 
 @app.route('/campaigns', methods=['GET'])
 def list_campaigns():
@@ -190,40 +233,46 @@ def list_campaigns():
    
    return render_template('home/campaigns.html', campaing=campaign)
 
-#------------------------------------------#
-#Campigns routes
-#-------------------------------------------#
 
-#@app.route('/new-campaign', methods=['GET', 'POST'])
-#def create_campaign():
 
- #   error = False
+@app.route('/campaigns/new', methods=['GET'])
+def new_campaign_form():
+
+    error = False
+    form = CampaignForm()
+
+    creators = Creators.query.all()
+
+    return render_template('forms/new-campaign.html', form=form, creators = creators) 
+
+@app.route('/campaigns/new', methods=['POST'])
+def new_campaign_submit():
+
+    error = False
+    form = CampaignForm()
+
+    try: 
+        name = form.name.data
+        start_date = form.start_date.data
+        last_date = form.last_date.data
+        budget = form.budget.data
+        sources = form.sources.data
+        description = form.description.data
+        creator = form.creator.data
     
-  #  try:
-   #     campaign = Campaigns (name = request.form.get('name'),
-    #    start_date = request.form.get('end'),
-     #   last_date = request.form.get('start'),
-      #  budget = request.form.get('budget'),
-      #  sources = request.form.get('social'),
-      #  description = request.form.get('description'),
-      #  creator = request.form.get('creator', ''),
-       # publisher = request.form.get('publisher', '')
-       # )
-        #print(campaign)
-        #db.session.add(campaign)
-        #db.session.commit()
-    #except: 
-    #    db.session.rollback()
+        campaign = Campaigns(name = name, start_date = start_date, last_date = last_date, budget = budget, sources = sources, description = description, creator = creator)
         
-    #    error = True
-     #   print(sys.exc_info())
+        db.session.add(campaign)
+        flash('Campaign ' + form.name.data + ' was successfully listed!')
+        db.session.commit()
+  
+    except:
+        db.session.rollback()
+        error = True
+    finally:
+        db.session.close()
     
-    #finally:
-    #    db.session.close()
-
-    #return redirect(url_for('list_campaigns'))
-
-    
+    return redirect(url_for('list_campaigns'))    
 
 @app.route('/campaigns/<int:campaign_id>/delete', methods=['GET', 'DELETE'])
 def delete_campaign(campaign_id):
@@ -241,19 +290,14 @@ def delete_campaign(campaign_id):
     finally:
         db.session.close()
 
-    #return redirect(url_for('campaigns'))
+    return redirect(url_for('campaigns'))
        
-
-# Creators routes. Creators can see all campaigns in orther to apply
-
-#@app.route('/campaigns/<int:id_campaign>', methods=['PATCH'])
-#def apply_campaign(id_campaign):
 
 
 #Error handlers
 
 @app.errorhandler(403)
-def not_found_error(error):
+def forbidden_error(error):
     return render_template('home/page-403.html'), 403
 
 @app.errorhandler(404)

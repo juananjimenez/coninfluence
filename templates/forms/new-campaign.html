@@ -12,9 +12,7 @@
   <div class="container-fluid d-flex align-items-center">
     <div class="row">
       <div class="col-lg-7 col-md-10">
-        <h1 class="display-2 text-white"> 
-          New campaing 
-        </h1>
+       
       </div>
     </div>
   </div>
@@ -28,13 +26,13 @@
             <div class="col-8">
               <h3 class="mb-0">Fill the fields </h3>
             </div>
+            <form action="/campaigns/new" method="POST">
             <div class="col-4 text-right">
               <input type="submit" id="submit" value="Save" class="btn btn-sm btn-primary"></a>
             </div>
           </div>
         </div>
         <div class="card-body">
-          <form action="/new-campaing" method="'POST">
             <h6 class="heading-small text-muted mb-4">Campaign information</h6>
             <div class="pl-lg-4">
               <div class="row">
@@ -52,8 +50,15 @@
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label" for="input-budget">Budget</label>
-                    <input type="email" id="input-email" name="budget" class="form-control" placeholder="budget">
+                    <input type="text" id="input-email" name="budget" class="form-control" placeholder="budget">
                   </div>
+                  <label class="form-control-label" for="input-budget">Creator</label>
+                    <select class="custom-select" id="inputGroupSelect01" name="creator">
+                      <option selected>Choose...</option>
+                      {% for creator in creators %}
+                      <option name= "creator" value="{creator.id}">{{creator.nick_name}}</option>
+                      {% endfor %}
+                    </select>
                 </div>
               </div>
               <div class="row">

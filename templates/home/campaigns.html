@@ -33,7 +33,7 @@
           </div>
           
           <div class="col-4 ">
-            <a href="{{url_for('create_campaign')}}" class="btn btn-sm btn-primary">New campaign</a>
+            <a href="{{url_for('new_campaign_form')}}" class="btn btn-sm btn-primary">New campaign</a>
           </div>
         
           <br>
@@ -79,7 +79,7 @@
                   
                   <td>
                     <div class="d-flex align-items-center">
-                      <span class="completion mr-2">{{campaings.creator}}</span>
+                      <span class="completion mr-2">{{campaings.creator.nick_name}}</span>
                       <div>
                   </td>
                   <td class="text-right">
