@@ -293,7 +293,6 @@ def delete_campaign(campaign_id):
     return redirect(url_for('campaigns'))
        
 
-
 #Error handlers
 
 @app.errorhandler(403)
