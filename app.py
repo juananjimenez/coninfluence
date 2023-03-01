@@ -20,7 +20,6 @@ from flask_moment import Moment
 from flask_cors import CORS
 from sqlalchemy import update
 from flask_sqlalchemy import SQLAlchemy
-import logging
 from flask_migrate import Migrate
 from logging import Formatter, FileHandler
 from flask_wtf import Form
@@ -28,18 +27,29 @@ import sys
 from datetime import datetime
 from models import db, Campaigns, Creators, Publisher
 from forms import *
+from auth import AuthError, requires_auth
 
 
-# App configuration
+# App configuration 1
 
 app = Flask(__name__)
 moment = Moment(app)
 #CORS(app)
 app.config.from_object('config')
 db.init_app(app)
-debug = True
 CORS(app)
 migrate = Migrate(app, db)
+
+#App configuration 2 doesn't work
+
+
+# def create_app(test_config=None):
+#     app = Flask(__name__)
+#     setup_db(app)
+    
+#     CORS(app, resources={'/': {'origins': '*'}})
+    
+# moment = Moment(app)
 
 
 
@@ -67,6 +77,15 @@ def after_request(response):
 @app.route('/')
 def home():
     return render_template('home/index.html')
+
+@app.route('/landing')
+def landing():
+    return render_template('home/landing.html')
+
+
+@app.route('/login')
+def login():
+    return render_template('home/login.html')
 
 #--------------------------------------#
 # Creators routes
@@ -294,6 +313,10 @@ def delete_campaign(campaign_id):
        
 
 #Error handlers
+
+@app.errorhandler(401)
+def server_error(error):
+    return render_template('home/page-500.html'), 401
 
 @app.errorhandler(403)
 def forbidden_error(error):
