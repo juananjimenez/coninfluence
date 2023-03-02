@@ -76,6 +76,7 @@ def after_request(response):
 
 @app.route('/')
 def home():
+    
     return render_template('home/index.html')
 
 @app.route('/landing')
@@ -85,7 +86,8 @@ def landing():
 
 @app.route('/login')
 def login():
-    return render_template('home/login.html')
+    AUTH0_AUTHORIZE_URL = 'https://dev-p3lkca7jo6xho5o5.us.auth0.com/authorize?audience=coninfluence&response_type=token&client_id=05RFUOo1aZPfti4R7U6LGlVWnnNfdmXy&redirect_uri=http:/localhost:5000'
+    return render_template('home/login.html', AUTH0_AUTHORIZE_URL = AUTH0_AUTHORIZE_URL)
 
 #--------------------------------------#
 # Creators routes
@@ -181,7 +183,7 @@ def edit_creator_form(creator_id):
     return render_template('forms/edit-creator.html', form=form, creator=creator)
 
 
-@app.route('/creator/<int:creator_id>/edit', methods= ['POST'])
+@app.route('/creator/<int:creator_id>/edit', methods= ['PATCH'])
 @requires_auth('post:creator-profile')
 def edit_creator_submission(creator_id):
 
@@ -204,8 +206,11 @@ def edit_creator_submission(creator_id):
         total_followers = form.total_followers.data
 
         
-        db.session.execute(update(Creators).where(id == creator_id).values(first_name = first_name, last_name = last_name, nick_name = nick_name, url_picture = url_picture, email = email, topics = topics,
-        instagram = instagram, tik_tok = tik_tok, facebook = facebook, twitter = twitter, youtube = youtube, total_followers = total_followers))
+        #db.session.execute(update(Creators).where(id == creator_id).values(first_name = first_name, last_name = last_name, nick_name = nick_name, url_picture = url_picture, email = email, topics = topics,
+        #instagram = instagram, tik_tok = tik_tok, facebook = facebook, twitter = twitter, youtube = youtube, total_followers = total_followers))
+     
+        update(Creators).where(id == creator_id).values(first_name = first_name, last_name = last_name, nick_name = nick_name, url_picture = url_picture, email = email, topics = topics,
+        instagram = instagram, tik_tok = tik_tok, facebook = facebook, twitter = twitter, youtube = youtube, total_followers = total_followers)
         db.session.commit()
 
     except:
@@ -325,9 +330,9 @@ def delete_campaign(campaign_id):
 
 #Error handlers
 
-@app.errorhandler(401)
-def server_error(error):
-    return render_template('home/page-500.html'), 401
+# @app.errorhandler(401)
+# def server_error(error):
+#     return render_template('home/page-401.html'), 401
 
 @app.errorhandler(403)
 def forbidden_error(error):
