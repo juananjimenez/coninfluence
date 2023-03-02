@@ -92,6 +92,7 @@ def login():
 #---------------------------------------#
 
 @app.route('/profile/<int:creator_id>', methods=['GET'])
+@requires_auth('get:profile')
 def show_profile(creator_id):
   
         profile = Creators.query.get_or_404(creator_id)
@@ -101,6 +102,7 @@ def show_profile(creator_id):
 # Creators list only for publishers
 
 @app.route('/creators', methods=['GET'])
+@requires_auth('get:creators')
 def list_creators():
 
     creators = Creators.query.all()
@@ -111,6 +113,7 @@ def list_creators():
 # New Creator
 
 @app.route('/creators/new', methods=['GET'])
+@requires_auth('get:creator-profile')
 def new_creator_form():
   form = CreatorForm()
 
@@ -118,6 +121,7 @@ def new_creator_form():
 
 
 @app.route('/creators/new', methods=['POST'])
+@requires_auth('post:creator-profile')
 def new_creator_submit():
     error = False
     form = CreatorForm()
@@ -155,6 +159,7 @@ def new_creator_submit():
 # Edit creator profile
 
 @app.route('/creator/<int:creator_id>/edit', methods= ['GET'])
+@requires_auth('get:creator-profile')
 def edit_creator_form(creator_id):
 
     form = CreatorForm()
@@ -177,6 +182,7 @@ def edit_creator_form(creator_id):
 
 
 @app.route('/creator/<int:creator_id>/edit', methods= ['POST'])
+@requires_auth('post:creator-profile')
 def edit_creator_submission(creator_id):
 
     error = False
@@ -229,6 +235,7 @@ def edit_creator_submission(creator_id):
 
 
 @app.route('/publishers-profile/<int:publisher_id>', methods=['GET'])
+@requires_auth('get:publisher-profile')
 def view_publisher_profile(publisher_id):
 
     publisher_profile = Publisher.query.get_or_404(publisher_id)
@@ -246,6 +253,7 @@ def view_publisher_profile(publisher_id):
 # Publishers could only see their own campaigns. This route is used for creators too and can only see theirs
 
 @app.route('/campaigns', methods=['GET'])
+@requires_auth('get:campaigns')
 def list_campaigns():
 
    campaign = Campaigns.query.all()
@@ -255,6 +263,7 @@ def list_campaigns():
 
 
 @app.route('/campaigns/new', methods=['GET'])
+@requires_auth('get:campaigns')
 def new_campaign_form():
 
     error = False
@@ -265,6 +274,7 @@ def new_campaign_form():
     return render_template('forms/new-campaign.html', form=form, creators = creators) 
 
 @app.route('/campaigns/new', methods=['POST'])
+@requires_auth('post:campaigns')
 def new_campaign_submit():
 
     error = False
@@ -294,6 +304,7 @@ def new_campaign_submit():
     return redirect(url_for('list_campaigns'))    
 
 @app.route('/campaigns/<int:campaign_id>/delete', methods=['GET', 'DELETE'])
+@requires_auth('delete:campaigns')
 def delete_campaign(campaign_id):
     
     try:
