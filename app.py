@@ -99,6 +99,9 @@ def show_profile(creator_id):
   
         profile = Creators.query.get_or_404(creator_id)
 
+        if not profile:
+            abort(400)
+
         return render_template('home/profile.html', profile=profile)
 
 # Creators list only for publishers
@@ -223,10 +226,7 @@ def edit_creator_submission(creator_id):
 
     if error:
         abort(500)
-        flash('An error occurred. Creator ' + nick_name + ' could not be updated.')
-    
-    else:
-        flash('Creator ' + nick_name + ' was successfully updated!')
+     
     
     return redirect(url_for('show_profile', creator_id=creator_id))
     
@@ -247,7 +247,7 @@ def view_publisher_profile(publisher_id):
     campaigns_created = Campaigns.query.filter_by(id_publisher = publisher_id).count()
     
 
-    return render_template('home/publishers-profile.html', profile=publisher_profile, campaigns = campaigns_created)
+    return render_template('home/publishers-profile.html', profile=publisher_profile, campaigns = campaigns_created, status_code=200)
 
 #------------------------------------------#
 #Campigns routes
@@ -328,6 +328,10 @@ def delete_campaign(campaign_id):
        
 
 #Error handlers
+
+@app.errorhandler(400)
+def forbidden_error(error):
+    return render_template('home/page-400.html'), 400
 
 # @app.errorhandler(401)
 # def server_error(error):

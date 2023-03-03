@@ -23,5 +23,5 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 TEST_USER = os.getenv('TEST_USER')
 TEST_PASS = os.getenv('TEST_PASS')
 
-SQLALCHEMY_DATABASE_URI_TEST = 'postgresql://' + TEST_USER + ':' + TEST_PASS + '@localhost:5432/coninfluence_test'
+SQLALCHEMY_DATABASE_URI = 'postgresql://' + TEST_USER + ':' + TEST_PASS + '@localhost:5432/coninfluence_test'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
