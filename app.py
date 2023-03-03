@@ -71,7 +71,7 @@ app.jinja_env.filters['datetime'] = format_datetime
 @app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-    response.headers.add('Access-Control-Allow-Headers', 'GET, POST, PATCH, DELETE, OPTIONS')
+    response.headers.add('Access-Control-Allow-Headers', 'GET, POST, PATCH, PUT, DELETE, OPTIONS')
     return response
 
 @app.route('/')
@@ -86,15 +86,15 @@ def landing():
 
 @app.route('/login')
 def login():
-    AUTH0_AUTHORIZE_URL = 'https://dev-p3lkca7jo6xho5o5.us.auth0.com/authorize?audience=coninfluence&response_type=token&client_id=05RFUOo1aZPfti4R7U6LGlVWnnNfdmXy&redirect_uri=http:/localhost:5000'
+    AUTH0_AUTHORIZE_URL = "https://dev-p3lkca7jo6xho5o5.us.auth0.com/authorize?audience=coninfluence&response_type=token&client_id=05RFUOo1aZPfti4R7U6LGlVWnnNfdmXy&redirect_uri=http:/localhost:5000"
     return render_template('home/login.html', AUTH0_AUTHORIZE_URL = AUTH0_AUTHORIZE_URL)
-
+    
 #--------------------------------------#
 # Creators routes
 #---------------------------------------#
 
 @app.route('/profile/<int:creator_id>', methods=['GET'])
-@requires_auth('get:profile')
+#@requires_auth('get:profile')
 def show_profile(creator_id):
   
         profile = Creators.query.get_or_404(creator_id)
@@ -104,7 +104,7 @@ def show_profile(creator_id):
 # Creators list only for publishers
 
 @app.route('/creators', methods=['GET'])
-@requires_auth('get:creators')
+#@requires_auth('get:creators')
 def list_creators():
 
     creators = Creators.query.all()
@@ -115,7 +115,7 @@ def list_creators():
 # New Creator
 
 @app.route('/creators/new', methods=['GET'])
-@requires_auth('get:creator-profile')
+#@requires_auth('get:creator-profile')
 def new_creator_form():
   form = CreatorForm()
 
@@ -123,7 +123,7 @@ def new_creator_form():
 
 
 @app.route('/creators/new', methods=['POST'])
-@requires_auth('post:creator-profile')
+#@requires_auth('post:creator-profile')
 def new_creator_submit():
     error = False
     form = CreatorForm()
@@ -161,7 +161,7 @@ def new_creator_submit():
 # Edit creator profile
 
 @app.route('/creator/<int:creator_id>/edit', methods= ['GET'])
-@requires_auth('get:creator-profile')
+#@requires_auth('get:creator-profile')
 def edit_creator_form(creator_id):
 
     form = CreatorForm()
@@ -183,8 +183,8 @@ def edit_creator_form(creator_id):
     return render_template('forms/edit-creator.html', form=form, creator=creator)
 
 
-@app.route('/creator/<int:creator_id>/edit', methods= ['PATCH'])
-@requires_auth('post:creator-profile')
+@app.route('/creator/<int:creator_id>/edit', methods= ['POST'])
+#@requires_auth('patch:creator-profile')
 def edit_creator_submission(creator_id):
 
     error = False
@@ -205,12 +205,11 @@ def edit_creator_submission(creator_id):
         youtube = form.youtube.data
         total_followers = form.total_followers.data
 
-        
-        #db.session.execute(update(Creators).where(id == creator_id).values(first_name = first_name, last_name = last_name, nick_name = nick_name, url_picture = url_picture, email = email, topics = topics,
-        #instagram = instagram, tik_tok = tik_tok, facebook = facebook, twitter = twitter, youtube = youtube, total_followers = total_followers))
      
-        update(Creators).where(id == creator_id).values(first_name = first_name, last_name = last_name, nick_name = nick_name, url_picture = url_picture, email = email, topics = topics,
+        creator=update(Creators).where(Creators.id == creator_id).values(first_name = first_name, last_name = last_name, nick_name = nick_name, url_picture = url_picture, email = email, topics = topics,
         instagram = instagram, tik_tok = tik_tok, facebook = facebook, twitter = twitter, youtube = youtube, total_followers = total_followers)
+        
+        db.session.execute(creator)
         db.session.commit()
 
     except:

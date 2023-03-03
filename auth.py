@@ -19,7 +19,10 @@ class AuthError(Exception):
 def get_token_auth_header():
     """Obtains the Access Token from the Authorization Header
     """
+
     auth = request.headers.get('Authorization', None)
+    print(auth)
+  
     if not auth:
         raise AuthError({
             'code': 'authorization_header_missing',
@@ -27,6 +30,8 @@ def get_token_auth_header():
         }, 401)
 
     parts = auth.split()
+    print(parts)
+    
     if parts[0].lower() != 'bearer':
         raise AuthError({
             'code': 'invalid_header',
@@ -46,7 +51,9 @@ def get_token_auth_header():
         }, 401)
 
     token = parts[1]
+    print(token)
     return token
+
 
 
 def verify_decode_jwt(token):
@@ -103,15 +110,22 @@ def verify_decode_jwt(token):
             }, 400)
 
 def check_permissions(permission, payload):
-    if 'permissions' not in payload:
-        abort(400)
+    if permission not in payload:
+        raise AuthError({
+                            'code': 'invalid_claims',
+                            'description': 'Permissions not included in JWT.'
+                        }, 400)
 
     if permission not in payload['permissions']:
-        abort(403)
+        raise AuthError({
+            'code': 'unauthorized',
+            'description': 'Permission not found.'
+        }, 403)
     
     return True 
 
 def requires_auth(permission=''):
+    
     def requires_auth_decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
@@ -120,7 +134,6 @@ def requires_auth(permission=''):
                 payload = verify_decode_jwt(token)
             except:
                 abort(401)
-            
             check_permissions(permission, payload)
             
             return f(payload, *args, **kwargs)
