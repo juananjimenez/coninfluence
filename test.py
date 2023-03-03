@@ -52,21 +52,32 @@ class ConinfluenceTest(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
 
     def test_creator_edit_post(self):
-        
+        res=self.client().post('/creator/3/edit')
+        self.assertEqual(res.status.code, 200)
 
-    # @app.route('/creator/<int:creator_id>/edit', methods= ['GET'])
+    def test_publishers_get(self):
+        res=self.client().get('/publishers-profile/3')
+        self.assertEqual(res.status.code, 200)
 
-    # @app.route('/creator/<int:creator_id>/edit', methods= ['POST'])
+    def test_campaigns_get(self):
+        res=self.client().get('/campaigns')
+        self.assertEqual(res.status.code, 200)
 
-    # @app.route('/publishers-profile/<int:publisher_id>', methods=['GET'])
+    def test_campaigns__new_get(self):
+        res=self.client().get('/campaigns/new')
+        self.assertEqual(res.status.code, 200)
 
-    # @app.route('/campaigns', methods=['GET'])
-
-    # @app.route('/campaigns/new', methods=['GET'])
-
-    # @app.route('/campaigns/new', methods=['POST'])
-
-    # @app.route('/campaigns/<int:campaign_id>/delete', methods=['GET', 'DELETE'])
+    def test_campaigns__new_post(self):
+        res=self.client().post('/campaigns/new')
+        self.assertEqual(res.status.code, 200)
+    
+    def test_campaigns__delete_get(self):
+        res=self.client().get('/campaigns/3/delete')
+        self.assertEqual(res.status.code, 200)
+    
+    def test_campaigns__delete_delete(self):
+        res=self.client().delete('/campaigns/3/delete')
+        self.assertEqual(res.status.code, 200)
 
 
 if __name__ == "__main__":
