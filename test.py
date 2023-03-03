@@ -22,7 +22,6 @@ class ConinfluenceTest(unittest.TestCase):
 
         with self.app.app_context():
             self.db = db
-            #self.db.init_app(self.app)
             self.db.create_all()
 
     def tearDown(self):
@@ -30,17 +29,46 @@ class ConinfluenceTest(unittest.TestCase):
 
     def test_get_home(self):
         res = self.client().get('/')
-        data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(data['success'], True)
+       
+    def test_list_creators(self):
+        res = self.client().get('/creators')
+        self.assertEqual(res.status_code, 200)
 
-    # def test_list_creators(self):
-    #     res = self.client().get('/creators')
-    #     data = json.loads(res.data)
-    #     self.assertEqual(res.status_code, 200)
-    #     self.assertEqual(data('success', True))
+    def test_profile(self):
+        res = self.client().get('/profile/3')
+        self.assertEqual(res.status_code, 200)
+    
+    def test_new_creator_get(self):
+        res=self.client().get('/creators/new')
+        self.assertEqual(res.status_code, 200)
         
-   
+    def test_new_creator_post(self):
+        res=self.client().post('/creators/new')
+        self.assertEqual(res.status_code, 200)
+
+    def test_creator_edit_get(self):
+        res=self.client().get('/creator/3/edit')
+        self.assertEqual(res.status_code, 200)
+
+    def test_creator_edit_post(self):
+        
+
+    # @app.route('/creator/<int:creator_id>/edit', methods= ['GET'])
+
+    # @app.route('/creator/<int:creator_id>/edit', methods= ['POST'])
+
+    # @app.route('/publishers-profile/<int:publisher_id>', methods=['GET'])
+
+    # @app.route('/campaigns', methods=['GET'])
+
+    # @app.route('/campaigns/new', methods=['GET'])
+
+    # @app.route('/campaigns/new', methods=['POST'])
+
+    # @app.route('/campaigns/<int:campaign_id>/delete', methods=['GET', 'DELETE'])
+
 
 if __name__ == "__main__":
     unittest.main()
+
