@@ -100,14 +100,14 @@ def show_profile(creator_id):
         profile = Creators.query.get_or_404(creator_id)
 
         if not profile:
-            abort(400)
+            abort(404)
 
         return render_template('home/profile.html', profile=profile)
 
 # Creators list only for publishers
 
 @app.route('/creators', methods=['GET'])
-#@requires_auth('get:creators')
+@requires_auth('get:creators')
 def list_creators():
 
     creators = Creators.query.all()
@@ -155,7 +155,7 @@ def new_creator_submit():
     except:
         db.session.rollback()
         error = True
-        print(sys.exec_info())
+        
     finally:
         db.session.close()
 
