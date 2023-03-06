@@ -1,14 +1,14 @@
-Capstone Project for FSND Full Stack Developer Nanodegree
+CONFLUENCE.IO Final Capstone project for Fullstack Nanodegree. Udacity program.
 
 Base URL
-https://abdelrahmanproj.herokuapp.com
+https://
 
 Motivations
-final project of full stack nanodegree ipmroves my skills and teaches lots of topics
+This projects simulates a Digital Agency where Publishers can contact content creators and assign social media campaigns to them. The app was designed using ARGON dashboard template. 
 
 Getting Started
 Installing Dependencies
-Python 3.7
+Python 3.10
 Follow instructions to install the latest version of python for your platform in the python docs
 
 Virtual Enviornment
@@ -28,53 +28,55 @@ SQLAlchemy is the Python SQL toolkit and ORM we'll use handle the lightweight sq
 Flask-CORS is the extension we'll use to handle cross origin requests from our frontend server.
 
 Database Setup
-for my local postgres path :"postgres://{}:{}@{}/{}".format( 'postgres', 'postgres', 'localhost:5432', capstone" for my postgres on heroku : "postgres://saqmdnbucthosu:5e6ec82b00af5309ba7c19ccc534a2de33673b4fbe7304fbe467714e2be777d6@ec2-52-0-155-79.compute-1.amazonaws.com:5432/d3nuuppk8gou7m"
+for my local postgres path :"postgres://{}:{}@{}/{}".format( 'student', 'student', 'localhost:5432', coninfluence" for my postgres in Render
+this is the postgress url
 
-change with your database path in brackets below database_path = "postgres://{}:{}@{}/{}".format(,'','localhost:5432', <database_name>)"
 
 Running the server
 From within the starter directory first ensure you are working using your created virtual environment.
 
-To run the server, execute:
+To run the server (localhost:8080), execute:
 
 export FLASK_APP=flaskr
 export FLASK_ENV=development
-flask run
-Tasks
-Endpoints and error handlung
-Creating company that is responsible for creating movies and managing and assigning actors to those movies. You are an Executive Producer within the company and are creating a system to simplify and streamline your process.
+flask run 
+
+TASKS
+
+The full dashboard after login shows a menu with three options with authorization requirements dependending if your role is Publisher o Creator 
 
 Use Flask-CORS to enable cross-domain requests and set response headers.
-Create an endpoint to handle GET requests for actors and movies
-Create an endpoint to DELETE actors and movies using their ID.
-Create an endpoint to POST a new actor and new movie
-Create a PATCH endpoint to patch actors and movies based on their IDs.
-Create error handlers for all expected errors including 400, 404, 422 and 405.
-Setup Auth0
-Create a new, single page web application
 
-Create a new API
+Create an endpoint to handle GET requests for creators list
+Create an endpoint to handle GET requests for campaigns list
+Create an endpoint to handle GET requests for user profile information
 
-in API Settings:
-Enable RBAC
-Enable Add Permissions in the Access Token
-Create new API permissions: -read:actors -read:movies -delete:movies -delete:actors -create:movies -create:actors -edit:movies -edit:actors
+Create an endpoint to DELETE campaigns.
 
-Create new roles for:
+Create an endpoint to UPDATE creators profile by id (Only the own creator could modify his or her profile)
+Create an endpoint to UPDATE publishers profile (Only the own publisher could modify his profile)
 
-Casting Assistant -read:actors -read:movies
-Casting Director -read:actors -read:movies -delete:actors -create:actors -edit:movies -edit:actors
-Executive Producer can perform all actions
+Create an endpoint to CREATE new campaigns (Only the publisher could do it)
+
+
+Create error handlers for all expected errors including 400, 401, 403, 404, and 500.
+
+AUTH0
+The application for this api is Coninfluence80 and the API name is coninfluence.
+
+There are actually to roles: creators and publishers. Creators only can access their profile and see the campaigns in which they are enroled. Publishers has all permissions except create and update creators profile.
+
+Publisher permissions: delete:campaigns, get:campaigns, get:creators, get:publisher-profile, post:campaign, post:publisher-profile, update:campaigns, update:profile
+
+Creators permissions: get:creators-profile, post:creator-profile
 Test your endpoints with Postman.
 
-Register 3 users
-Sign into each account and make note of the JWT.
-add your token in authorization tab
-for test cases you can just add to your endpoint a header with " Bearer ......(your noted token)"
-End Points
+END POINTS
 GET /actors Request Headers: None Requires permission: read:actors Using Postman with sample below and curl Sample: curl -X GET https://abdelrahmanproj.herokuapp.com/actors
 
-{ "actors": [ { "age": 30, "gender": "male", "id": 1, "name": "Mohamed" } ], "success": true } GET /movies Request Headers: None Requires permission: read:movies Using Postman with sample below Sample: curl -X GET https://abdelrahmanproj.herokuapp.com/movies
+{ "actors": [ { "age": 30, "gender": "male", "id": 1, "name": "Mohamed" } ], "success": true } 
+
+GET /movies Request Headers: None Requires permission: read:movies Using Postman with sample below Sample: curl -X GET https://abdelrahmanproj.herokuapp.com/movies
 
 { "movies": [ { "id": 1, "release_date": "Mon, 12 Oct 2020 00:00:00 GMT", "title": "comedy" } ], "success": true }
 
@@ -139,5 +141,6 @@ PATCH /actors/actor_id Request Arguments: integer id Request Headers: (applicati
 "updated": 1
 }
 
-Unit tests
-to run test cases use this command $ python test_app.py .........................
+UNIT TEST
+to run test cases use this command $ python test.py. It's configured for all the endpoints.
+

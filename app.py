@@ -86,7 +86,7 @@ def landing():
 
 @app.route('/login')
 def login():
-    AUTH0_AUTHORIZE_URL = "https://dev-p3lkca7jo6xho5o5.us.auth0.com/authorize?audience=coninfluence&response_type=token&client_id=05RFUOo1aZPfti4R7U6LGlVWnnNfdmXy&redirect_uri=http:/localhost:5000"
+    AUTH0_AUTHORIZE_URL = ""
     return render_template('home/login.html', AUTH0_AUTHORIZE_URL = AUTH0_AUTHORIZE_URL)
     
 #--------------------------------------#
@@ -257,7 +257,7 @@ def view_publisher_profile(publisher_id):
 # Publishers could only see their own campaigns. This route is used for creators too and can only see theirs
 
 @app.route('/campaigns', methods=['GET'])
-#@requires_auth('get:campaigns')
+@requires_auth('get:campaigns')
 def list_campaigns():
 
    campaign = Campaigns.query.all()
@@ -354,5 +354,5 @@ def server_error(error):
 # Default port and launch
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=8080)
 

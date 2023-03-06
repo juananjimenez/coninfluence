@@ -3,11 +3,16 @@ from flask import request, abort
 from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
-AUTH0_DOMAIN = 'dev-p3lkca7jo6xho5o5.us.auth0.com'
-ALGORITHMS = ['RS256']
-API_AUDIENCE = 'coninfluence'
+
+AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN')
+ALGORITHMS = os.getenv('ALGORITHMS')
+API_AUDIENCE = os.getenv('API_AUDIENCE')
 
 
 class AuthError(Exception):
@@ -23,13 +28,14 @@ def get_token_auth_header():
     auth = request.headers.get('Authorization', None)
     print(auth)
   
-    # if not auth:
-    #     raise AuthError({
-    #         'code': 'authorization_header_missing',
-    #         'description': 'Authorization header is expected.'
-    #     }, 401)
+    if not auth:
+        raise AuthError({
+            'code': 'authorization_header_missing',
+            'description': 'Authorization header is expected.'
+        }, 401)
 
     parts = auth.split(' ')
+    
     
     
     if parts[0].lower() != 'bearer':
