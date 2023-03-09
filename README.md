@@ -66,8 +66,9 @@ Publisher permissions: delete:campaigns, get:campaigns, get:creators, get:publis
 Creators permissions: get:creators-profile, post:creator-profile
 Test your endpoints with Postman.
 You've got two users for test purposes:
-rosa.diez@nike.com (publisher)
-cristina.cifuentes@pp.es (creator)
+rosa.diez@nike.com (publisher). Pass: rosa.diez.nike.1. Permissions: [delete:campaigns], [get:campaigns], [get:creators], [get:creators-profile], [get:publisher-profile], [post:campaign], [post:creator-profile], [post:publisher-profile],[update:campaigns], [update:profile]
+
+cristina.cifuentes@pp.es (creator). Pass: cristina.cifuentes.pp.1 Permissions: [get:creators-profile], [post:creator-profile]
 
 END POINTS
 
