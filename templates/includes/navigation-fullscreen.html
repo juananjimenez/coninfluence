@@ -24,7 +24,7 @@
       </div>
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-           <a href="/profile" class="nav-link">
+           <a href="/publishers-profile" class="nav-link">
             <span class="nav-link-inner--text">Profile</span>
           </a>
         </li>
@@ -57,13 +57,14 @@
           </a>
         </li>
         <li class="nav-item d-none d-lg-block ml-lg-4">
-          <a href="{{AUTH0_AUTHORIZE_URL}}" 
+          <a href="{{url_for('login')}}" 
              target="_blank" class="btn btn-neutral btn-icon">
             <span class="btn-inner--icon">
               <i class="fas fa-rocket mr-2"></i>
             </span>
             <span class="nav-link-inner--text">Login</span>
           </a>
+         
         </li>
       </ul>
     </div>

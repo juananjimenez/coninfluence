@@ -50,15 +50,10 @@ Use Flask-CORS to enable cross-domain requests and set response headers.
 Create an endpoint to handle GET requests for creators list
 Create an endpoint to handle GET requests for campaigns list
 Create an endpoint to handle GET requests for user profile information
-
 Create an endpoint to DELETE campaigns.
-
 Create an endpoint to UPDATE creators profile by id (Only the own creator could modify his or her profile)
 Create an endpoint to UPDATE publishers profile (Only the own publisher could modify his profile)
-
 Create an endpoint to CREATE new campaigns (Only the publisher could do it)
-
-
 Create error handlers for all expected errors including 400, 401, 403, 404, and 500.
 
 AUTH0
@@ -70,76 +65,130 @@ Publisher permissions: delete:campaigns, get:campaigns, get:creators, get:publis
 
 Creators permissions: get:creators-profile, post:creator-profile
 Test your endpoints with Postman.
+You've got two users for test purposes:
+rosa.diez@nike.com (publisher)
+cristina.cifuentes@pp.es (creator)
 
 END POINTS
-GET /actors Request Headers: None Requires permission: read:actors Using Postman with sample below and curl Sample: curl -X GET https://abdelrahmanproj.herokuapp.com/actors
 
-{ "actors": [ { "age": 30, "gender": "male", "id": 1, "name": "Mohamed" } ], "success": true } 
+GET ('/login') Entry point that redirects to Auth0 login page
 
-GET /movies Request Headers: None Requires permission: read:movies Using Postman with sample below Sample: curl -X GET https://abdelrahmanproj.herokuapp.com/movies
+GET ('/') After login this is the callback where you are redirected and see your dashboard.
 
-{ "movies": [ { "id": 1, "release_date": "Mon, 12 Oct 2020 00:00:00 GMT", "title": "comedy" } ], "success": true }
 
-DELETE /actors/actor_id Request Arguments: integer id Request Headers: None Requires permission: delete:actors Using Postman with sample below Sample: curl -X DELETE https://abdelrahmanproj.herokuapp.com/actors/2
+GET (/profile/<int:creator_id>) Requires permission: get:profile: 
 
+{ "profile": [ { "first_name": "Carlos", "last_name": "Orellana", "nick_name": "Carlitos", "url_picture": "https://carlitos.jpg", "email": "carlitos@gmail.com", "topics": "Fifa, Xbox, King of Leyends", "instragram": None, "tik_tok": None, "facebook": None, "Twitter": None, "youtube": "www.youtube.com/carlitos", "total_followers": 2345678}] 
+
+GET (/creators) Requires permission: get:creators:
+
+{"creators": [{"nick_name": "carlitos", "total_followers": 234567, "topics": "Fifa, Xbox, King of Leyends", "channels": "youtube" }]}
+
+GET (/creators/new) Requires permission: get:creator-profile:
 {
-"deleted": 2,
-"success": true
+first_name,
+last_name,
+nick_name,
+url_picture,
+email,
+topics,
+instagram,
+tik_tok,
+facebook,
+twitter,
+youtube,
+total_followers,
 }
 
-DELETE /movies/movie_id Request Arguments: integer id Request Headers: None Requires permission: delete:movies Using Postman with sample below Sample: curl -X DELETE https://abdelrahmanproj.herokuapp.com/actors/1
-
-{ "deleted": 1, "success": true }
-
-POST /actors Request Arguments: None Request Headers: (application/json) string name - integer age - string gender Requires permission: create:actors Using Postman with sample below Sample: curl -X POST https://abdelrahmanproj.herokuapp.com/actors
+POST (/creators/new) permission: post:creator-profile:
 
 {
-"actor_id": 3,
-"actors": {
-    "age": 22,
-    "gender": "female",
-    "name": "Mary"
-},
-"success": true
+"first_name": "Carlos",
+"last_name": "Orellana",
+"nick_name": "Carlitos",
+"url_picture": "https://carlitos.jpg",
+"email": "carlitos@gmail.com",
+"topics": "Fifa, Xbox, King of Leyends",
+"instagram": None,
+"tik_tok": None,
+"facebook": None,
+"twitter": None,
+"youtube", "youtube.com/carlitos",
+"total_followers", 345678
 }
 
-POST /movies Request Arguments: None Request Headers: (application/json) string title - date release_date Requires permission: create:movies Using Postman with sample below Sample: curl -X POST https://abdelrahmanproj.herokuapp.com/movies
+GET (/creator/<int:creator_id>/edit) permission: get:creator-profile:
 
 {
-"movie_id": 1,
-"movies": {
-    "release_date": "2020-10-12",
-    "title ": "comedy"
-},
-"success": true
+"first_name": "Carlos",
+"last_name": "Orellana",
+"nick_name": "Carlitos",
+"url_picture": "https://carlitos.jpg",
+"email": "carlitos@gmail.com",
+"topics": "Fifa, Xbox, King of Leyends",
+"instagram": None,
+"tik_tok": None,
+"facebook": None,
+"twitter": None,
+"youtube", "youtube.com/carlitos",
+"total_followers", 345678
 }
 
-PATCH /actors/actor_id Request Arguments: integer id Request Headers: (application/json) string name - integer age - string gender Requires permission: edit:actors Using Postman with sample below Sample: curl -X PATCH https://abdelrahmanproj.herokuapp.com/actors/3
+POST (/creator/<int:creator_id>/edit) permission: post:creator-profile. This endpoint doesn't works with PUT
 
 {
-"actor": [
-    {
-        "age": 27,
-        "gender": "female",
-        "id": 3,
-        "name": "Mary"
-    }
-],
-"success": true,
-"updated": 3
-} PATCH /movies/movie_id Request Arguments: integer id Request Headers: (application/json) string title - date release_date Requires permission: edit:movies Using Postman with sample below Sample: curl -X PATCH https://abdelrahmanproj.herokuapp.com/movies/1
-
-{
-"movie": [
-    {
-        "id": 1,
-        "release_date": "Mon, 12 Oct 2020 00:00:00 GMT",
-        "title": "action"
-    }
-],
-"success": true,
-"updated": 1
+"first_name": "Carlos",
+"last_name": "Orellana",
+"nick_name": "Carlitos",
+"url_picture": "https://carlitos.jpg",
+"email": "carlitos@gmail.com",
+"topics": "Fifa, Xbox, King of Leyends",
+"instagram": None,
+"tik_tok": None,
+"facebook": None,
+"twitter": None,
+"youtube", "youtube.com/carlitos",
+"total_followers", 345678
 }
+
+
+GET ('/publishers-profile/<int:publisher_id>') Requires permission: get:publisher-profile
+
+{
+"company_name": "Nike",
+"email": "rosa.diez@nike.com",
+"industry": "sportswear",
+"website": "www.nike.com",
+"url_logo": "http://nike.com/logo.jpg,
+"twitter": None,
+"campaigns_launched", 1
+
+}
+
+GET ('/campaigns') Requires permission: get:campaigns
+
+{
+"name": "Leo Messi soccer boots promotion",
+"start_date": 2023-07-20 00:00:00
+"last_date": 2023-10-23 00:00:00
+"budget": "50000 $"
+"creator": None
+}
+
+POST ('/campaigns/new') Requires permission: post:campaigns':
+
+{
+"name": "Leo Messi soccer boots promotion",
+"start_date": 2023-07-20 00:00:00
+"last_date": 2023-10-23 00:00:00
+"budget": "50000 $"
+"creator": None,
+"description": "Launche Leo Messi new boots",
+"sources": "youtube.com",
+}
+
+DELETE ('/campaigns/<int:campaign_id>/delete') Requires permission: delete:campaigns
+
 
 UNIT TEST
 to run test cases use this command $ python test.py. It's configured for all the endpoints.

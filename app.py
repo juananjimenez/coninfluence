@@ -4,12 +4,14 @@
 
 
 import json
+import os
 import dateutil.parser
 import babel
 from flask import (
   Flask, 
   render_template, 
-  request, 
+  request,
+  session, 
   Response,
   jsonify, 
   flash, 
@@ -21,35 +23,27 @@ from flask_cors import CORS
 from sqlalchemy import update
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from logging import Formatter, FileHandler
 from flask_wtf import Form
 import sys
 from datetime import datetime
 from models import db, Campaigns, Creators, Publisher
 from forms import *
 from auth import AuthError, requires_auth
+from os import environ as env
+from urllib.parse import quote_plus, urlencode
+
 
 
 # App configuration 1
 
+
 app = Flask(__name__)
 moment = Moment(app)
-#CORS(app)
+app.secret_key = env.get("APP_SECRET_KEY")
 app.config.from_object('config')
 db.init_app(app)
-CORS(app)
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 migrate = Migrate(app, db)
-
-#App configuration 2 doesn't work
-
-
-# def create_app(test_config=None):
-#     app = Flask(__name__)
-#     setup_db(app)
-    
-#     CORS(app, resources={'/': {'origins': '*'}})
-    
-# moment = Moment(app)
 
 
 
@@ -74,6 +68,15 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Headers', 'GET, POST, PATCH, PUT, DELETE, OPTIONS')
     return response
 
+#--------------------------------------#
+# Login & logout routes
+#---------------------------------------#
+
+@app.route('/login')
+def login():
+    AUTH0_AUTHORIZE_URL = "https://dev-p3lkca7jo6xho5o5.us.auth0.com/authorize?audience=coninfluence&response_type=token&client_id=TWJQz7GUeX3xAZRB9HYplTf7jsnrVHRp&redirect_uri=http://localhost:8080"
+    return render_template('home/login.html', AUTH0_AUTHORIZE_URL = AUTH0_AUTHORIZE_URL)
+
 @app.route('/')
 def home():
     
@@ -84,11 +87,6 @@ def landing():
     return render_template('home/landing.html')
 
 
-@app.route('/login')
-def login():
-    AUTH0_AUTHORIZE_URL = ""
-    return render_template('home/login.html', AUTH0_AUTHORIZE_URL = AUTH0_AUTHORIZE_URL)
-    
 #--------------------------------------#
 # Creators routes
 #---------------------------------------#
@@ -97,17 +95,17 @@ def login():
 #@requires_auth('get:profile')
 def show_profile(creator_id):
   
-        profile = Creators.query.get_or_404(creator_id)
-
-        if not profile:
-            abort(404)
-
-        return render_template('home/profile.html', profile=profile)
+    profile = Creators.query.get_or_404(creator_id)
+    
+    if not profile:
+        abort(404)
+  
+    return render_template('home/profile.html', profile=profile)
 
 # Creators list only for publishers
 
 @app.route('/creators', methods=['GET'])
-@requires_auth('get:creators')
+#@requires_auth('get:creators')
 def list_creators():
 
     creators = Creators.query.all()
@@ -243,9 +241,8 @@ def edit_creator_submission(creator_id):
 def view_publisher_profile(publisher_id):
 
     publisher_profile = Publisher.query.get_or_404(publisher_id)
-
     campaigns_created = Campaigns.query.filter_by(id_publisher = publisher_id).count()
-    
+
 
     return render_template('home/publishers-profile.html', profile=publisher_profile, campaigns = campaigns_created, status_code=200)
 
@@ -257,7 +254,7 @@ def view_publisher_profile(publisher_id):
 # Publishers could only see their own campaigns. This route is used for creators too and can only see theirs
 
 @app.route('/campaigns', methods=['GET'])
-@requires_auth('get:campaigns')
+#@requires_auth('get:campaigns')
 def list_campaigns():
 
    campaign = Campaigns.query.all()
@@ -329,13 +326,19 @@ def delete_campaign(campaign_id):
 
 #Error handlers
 
+@app.errorhandler(AuthError)
+def handle_auth_error(ex):
+    response = jsonify(ex.error)
+    response.status_code = ex.status_code
+    return response
+
 @app.errorhandler(400)
 def forbidden_error(error):
     return render_template('home/page-400.html'), 400
 
-# @app.errorhandler(401)
-# def server_error(error):
-#     return render_template('home/page-401.html'), 401
+@app.errorhandler(401)
+def server_error(error):
+    return render_template('home/page-401.html'), 401
 
 @app.errorhandler(403)
 def forbidden_error(error):
@@ -349,7 +352,11 @@ def not_found_error(error):
 def server_error(error):
     return render_template('home/page-500.html'), 500
 
-
+@app.route('/headers')
+@requires_auth('get:creators')
+def headers(payload):
+    print(payload)
+    return 'Access Granted'
 
 # Default port and launch
 
