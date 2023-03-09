@@ -1,0 +1,7 @@
+export DATABASE_URL = ''
+export CALLBACK_URL = 'http://localhost:8080/'
+export AUTH0_DOMAIN = 'dev-p3lkca7jo6xho5o5.us.auth0.com'
+export AUTH0_CLIENT_ID ='TWJQz7GUeX3xAZRB9HYplTf7jsnrVHRp'
+export ALGORITHMS = '['RS256']'
+export API_AUDIENCE = 'coninfluence80'
+export APP_SECRET_KEY = '00cf281e0d1f7bf1d1244e9be249ff3ff663f59c274cc2dfbfef11ba4c476b19'
