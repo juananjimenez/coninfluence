@@ -105,7 +105,7 @@ def show_profile(creator_id):
 # Creators list only for publishers
 
 @app.route('/creators', methods=['GET'])
-@requires_auth('get:creators')
+#@requires_auth('get:creators')
 def list_creators(payload):
 
     creators = Creators.query.all()
@@ -116,7 +116,7 @@ def list_creators(payload):
 # New Creator
 
 @app.route('/creators/new', methods=['GET'])
-@requires_auth('get:creator-profile')
+#@requires_auth('get:creator-profile')
 def new_creator_form(payload):
   form = CreatorForm()
 
@@ -124,7 +124,7 @@ def new_creator_form(payload):
 
 
 @app.route('/creators/new', methods=['POST'])
-@requires_auth('post:creator-profile')
+#@requires_auth('post:creator-profile')
 def new_creator_submit(payload):
     error = False
     form = CreatorForm()
@@ -162,7 +162,7 @@ def new_creator_submit(payload):
 # Edit creator profile
 
 @app.route('/creator/<int:creator_id>/edit', methods= ['GET'])
-@requires_auth('get:creator-profile')
+#@requires_auth('get:creator-profile')
 def edit_creator_form(payload, creator_id):
 
     form = CreatorForm()
@@ -185,7 +185,7 @@ def edit_creator_form(payload, creator_id):
 
 
 @app.route('/creator/<int:creator_id>/edit', methods= ['POST'])
-@requires_auth('patch:creator-profile')
+#@requires_auth('patch:creator-profile')
 def edit_creator_submission(payload, creator_id):
 
     error = False
@@ -237,7 +237,7 @@ def edit_creator_submission(payload, creator_id):
 
 
 @app.route('/publishers-profile/<int:publisher_id>', methods=['GET'])
-@requires_auth('get:publisher-profile')
+#@requires_auth('get:publisher-profile')
 def view_publisher_profile(payload, publisher_id):
 
     publisher_profile = Publisher.query.get_or_404(publisher_id)
@@ -254,7 +254,7 @@ def view_publisher_profile(payload, publisher_id):
 # Publishers could only see their own campaigns. This route is used for creators too and can only see theirs
 
 @app.route('/campaigns', methods=['GET'])
-@requires_auth('get:campaigns')
+#@requires_auth('get:campaigns')
 def list_campaigns(payload):
 
    campaign = Campaigns.query.all()
@@ -264,7 +264,7 @@ def list_campaigns(payload):
 
 
 @app.route('/campaigns/new', methods=['GET'])
-@requires_auth('get:campaigns')
+#@requires_auth('get:campaigns')
 def new_campaign_form(payload):
 
     error = False
@@ -275,7 +275,7 @@ def new_campaign_form(payload):
     return render_template('forms/new-campaign.html', form=form, creators = creators) 
 
 @app.route('/campaigns/new', methods=['POST'])
-@requires_auth('post:campaigns')
+#@requires_auth('post:campaigns')
 def new_campaign_submit(payload):
 
     error = False
@@ -305,7 +305,7 @@ def new_campaign_submit(payload):
     return redirect(url_for('list_campaigns'))    
 
 @app.route('/campaigns/<int:campaign_id>/delete', methods=['GET', 'DELETE'])
-@requires_auth('delete:campaigns')
+#@requires_auth('delete:campaigns')
 def delete_campaign(payload, campaign_id):
     
     try:
