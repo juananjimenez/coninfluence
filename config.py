@@ -20,8 +20,8 @@ SQLALCHEMY_DATABASE_URI = 'postgresql://' + DB_USER + ':' + DB_PASS + '@ldpg-cg8
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 #Test database
-TEST_USER = os.getenv('TEST_USER')
-TEST_PASS = os.getenv('TEST_PASS')
+#TEST_USER = os.getenv('TEST_USER')
+#TEST_PASS = os.getenv('TEST_PASS')
 
-SQLALCHEMY_DATABASE_URI_TEST = 'postgresql://' + TEST_USER + ':' + TEST_PASS + '@localhost:5432/coninfluence_test'
-SQLALCHEMY_TRACK_MODIFICATIONS = False
+#SQLALCHEMY_DATABASE_URI_TEST = 'postgresql://' + TEST_USER + ':' + TEST_PASS + '@localhost:5432/coninfluence_test'
+#SQLALCHEMY_TRACK_MODIFICATIONS = False
