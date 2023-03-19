@@ -1,7 +1,7 @@
 CONFLUENCE.IO Final Capstone project for Fullstack Nanodegree. Udacity program.
 
 Base URL
-https://
+https://coninfluence-deployement.onrender.com
 
 Motivations
 This projects simulates a Digital Agency where Publishers can contact content creators and assign social media campaigns to them. The app was designed using ARGON dashboard template. 
